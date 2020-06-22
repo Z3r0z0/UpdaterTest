@@ -1,0 +1,29 @@
+# Travis CI for building UpdateTest
+# ----------------------------------------
+
+language: csharp
+solution: UpdaterTest.csproj
+mono: none
+dotnet: 3.1.301
+
+addons:
+  apt:
+    packages:
+      - zip
+
+install:
+  - dotnet restore
+
+script:
+  .dotnet test
+
+befor_deploy:
+  - dotnet build -c release -o -/output
+
+deploy:
+  provider: releases
+  overwrite: true
+  api_key: $GITHUB_TOKEN
+  skip_cleanup: true
+  on:
+    tags: true
